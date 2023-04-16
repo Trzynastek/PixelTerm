@@ -1,0 +1,27 @@
+@import url(https://fonts.bunny.net/css?family=fira-code:300,600);
+:root {
+    --link: #000000;
+}
+html * {
+    font-family: "CaskaydiaCove Nerd Font", monospace;
+}
+.bold {
+    font-weight: bold;
+}
+.italic {
+    font-style: italic;
+}
+body {
+    padding: 10px !important;
+}
+.ascii {
+    line-height: 19px;
+    margin: 0;
+    white-space: pre;
+}
+a {
+    color: var(--link)
+}
+.typing {
+    color: red;
+}
