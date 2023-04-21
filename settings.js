@@ -49,8 +49,10 @@ msg = {
             /green/::/end/ /magenta/cat/end/ /black/- displays contents of a file/end/<br>
             /green/::/end/ /magenta/cd/end/ /black/- navigates directories/end/<br>
             /green/::/end/ /magenta/clear/end/ /black/- clears the terminal/end/<br>
+            /green/::/end/ /magenta/credits/end/ /black/- displays credits/end/<br>
             /green/::/end/ /magenta/help/end/ /black/- displays this message/end/<br>
             /green/::/end/ /magenta/ls/end/ /black/- displays contents of current the directory/end/<br>
+            /green/::/end/ /magenta/lshw/end/ /black/- displays list of my PC components/end/<br>
             /green/::/end/ /magenta/neofetch/end/ /black/- displays system info/end/<br>
             /green/::/end/ /magenta/splash/end/ /black/- displays splashs message/end/`,
     intro: `/magenta/<p class="ascii">█ █ █▀▀ █   █   █▀█     █ █ █ █▀█ █▀█ █   █▀▄ █<br>█▀█ ██▄ █▄▄ █▄▄ █▄█ █   ▀▄▀▄▀ █▄█ █▀▄ █▄▄ █▄▀ ▄</p><br>
@@ -60,8 +62,42 @@ msg = {
             I'm currently studying at a technical school in Poland.<br>
             My goal is to become a front-end developer /end/`,
     credits: `/b//magenta/Website developed by /green/ ☛ <span style="cursor: pointer;" onclick="location.href='https://github.com/Trzynastek'">Trzynu</span>/end/`,
+    PixelTerm: `/b//magenta/PixelTerm/end/ is a terminal style portfolio website /black/(this one)/end/.<br>
+                /green/ ☛ <span style="cursor: pointer;" onclick="location.href='https://github.com/Trzynastek/PixelTerm'">View on GitHub</span>/end//end/`,
+    PixelPage: `/b//magenta/PixelPage/end/ is a modern and simple browser homepage inspired by /green/ ☛ <span style="cursor: pointer;" onclick="location.href='https://github.com/migueravila/Bento'">Bento</span>/end/.<br>
+                /green/ ☛ <span style="cursor: pointer;" onclick="location.href='https://github.com/Trzynastek/PixelPage'">View on GitHub</span>/end//end/`,
+    PixelWordle: `/b//magenta/PixelWordle/end/ is a simple /green/ ☛ <span style="cursor: pointer;" onclick="location.href='https://www.nytimes.com/games/wordle/index.html'">Wordle</span>/end/ recreation with a few additions.<br>
+                /green/ ☛ <span style="cursor: pointer;" onclick="location.href='https://github.com/Trzynastek/PixelWordle'">View on GitHub</span>/end/<br>
+                /blue/ ☛ <span style="cursor: pointer;" onclick="location.href='https://PixelWordle.vercel.app'">View website</span>/end//end/`,
+    Atlas: `/b//magenta/Atlas/end/ is a library of pirated sgames and software created to make downloading them safer and easier.<br>
+            /green/ ☛ <span style="cursor: pointer;" onclick="location.href='https://github.com/Trzynastek/Atlas'">View on GitHub</span>/end/<br>
+            /blue/ ☛ <span style="cursor: pointer;" onclick="location.href='https://atlas-azure.vercel.app'">View website</span>/end//end/`,
+    KeyTest: `/b//magenta/KeyTest/end/ is a simple typing speed test, tho' it isn't really finished and has a lot of bugs.<br>
+                /green/ ☛ <span style="cursor: pointer;" onclick="location.href='https://github.com/Trzynastek/KeyTest'">View on GitHub</span>/end/<br>
+                /blue/ ☛ <span style="cursor: pointer;" onclick="location.href='https://key-test.vercel.app'">View website</span>/end//end/`,
+    lshw: `/b//magenta/CPU/end/: Ryzen 5 3600<br>
+            /magenta/GPU/end/: Radeon Rx 6600 xt<br>
+            /magenta/RAM/end/: DDR4 16 GB 3000mhz/end/`,
 }
 cmdlist = {
+    PixelTerm: function () {
+        display('PixelTerm')
+    },
+    PixelPage: function () {
+        display('PixelPage')
+    },
+    PixelWordle: function () {
+        display('PixelWordle')
+    },
+    Atlas: function () {
+        display('Atlas')
+    },
+    KeyTest: function () {
+        display('KeyTest')
+    },
+    lshw: function() {
+        display('lshw')
+    },
     help: function() {
         display('help')
     },
@@ -88,9 +124,9 @@ cmdlist = {
         }
     },
     cd: function(target) {
-        if (Object.keys(current).includes(target[0])) {
-            current = current[target[0]]
-        } else if (target[0] == '..') {
+        if (Object.keys(current).includes(target)) {
+            current = current[target]
+        } else if (target == '..') {
             path = terminal.innerHTML.split('>').pop().trim().split('.')
             path.pop()
             parentKey = path.join('.')
@@ -104,11 +140,13 @@ cmdlist = {
         }
     },
     cat: function(file) {
-        if (file[0] && file[0].length > 0) {
-            if (extensions.includes(file[0].split('.')[1])) {
-                if (current.includes(file[0])) {
-                    console.log(file[0], file[0].slice(0, - (file[0].split('.')[1].length + 1)))
-                    cmdlist[file[0].slice(0, - (file[0].split('.')[1].length + 1))]()
+        if (file && file.length > 0) {
+            if (extensions.includes(file.split('.')[1])) {
+                if (current.includes(file)) {
+                    console.log(file.slice(0, - (file.split('.')[1].length + 1)))
+                    cmdlist[file.slice(0, - (file.split('.')[1].length + 1))]()
+                } else {
+                    display('e3')
                 }
             } else {
                 display('e4')
@@ -123,7 +161,7 @@ cmdlist = {
             display('null', false, neofetch.text[i])
             display('null', false, '<br>')
         }
-    }
+    },
 }
 defs = {
     background: '#1a1b26',
@@ -140,19 +178,13 @@ defs = {
 extensions = [
     'sh',
     'txt',
-
 ]
 directory = {
-    Projects: {
-        test: {
-            test2: {
-
-            },
-        },
-    },
-    Commands: [
-        'about.txt',
-        'help.txt',
-        'splash.txt',
-    ]
+    Projects: [
+        'PixelTerm.txt',
+        'PixelPage.txt',
+        'PixelWordle.txt',
+        'Atlas.txt',
+        'KeyTest.txt',
+    ],
 }

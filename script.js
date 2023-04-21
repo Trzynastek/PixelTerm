@@ -9,8 +9,10 @@ document.addEventListener("keydown", function(e) {
         enter()
     } else  if (banned.includes(e.key)) {
         if (e.key == 'ArrowUp') {
+            e.preventDefault()
             history('up')
         } else if (e.key == 'ArrowDown') {
+            e.preventDefault()
             history('down')
         }
     } else {
@@ -24,15 +26,14 @@ function enter() {
     history('add', command)
     run(command)
     if (command[0] == 'cd' || command[0] == 'neofetch') {
-        terminal.innerHTML += '<br></span>'
-        console.log('1')
+        terminal.innerHTML += '<br>'
     } else {
         if (command != 'clear') {
-            terminal.innerHTML += '<br><br></span>'
-            console.log('2')
+            terminal.innerHTML += '<br><br>'
         }
     }
     display('theme')
+    window.scrollTo(0, document.body.scrollHeight)
 }
 function history(operation, input) {
     if (operation == 'add') {
@@ -57,14 +58,16 @@ function history(operation, input) {
             terminal.innerHTML = terminal.innerHTML.slice(0, -(last))
             terminal.innerHTML += display('theme', true)
             terminal.innerHTML += hist[pos-1]
-            pos += -1
+            pos -= 1
         }
     }
 }
 function run(input) {
-    command = input.split('>')
-    if (command[command.length - 1] in cmdlist) {
-        cmdlist[command[command.length - 1]](command.slice(1))
+    command = input.split(' ')
+    if (command[0] in cmdlist) {
+        cmdlist[command[0]](command[1])
+        console.log(command[0])
+        console.log(command[1])
     } else {
         display('e1')
     }
@@ -103,4 +106,3 @@ current = directory
 run('splash')
 terminal.innerHTML += '<br><br>'
 display('theme')
-terminal.innerHTML += '<span class="typing">'
