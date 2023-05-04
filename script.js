@@ -23,6 +23,9 @@ function enter() {
     input = terminal.innerHTML.split('<br>')
     last = input.length -2
     command = input[last].substring(display('theme', true).length)
+    if (command.substring(1, 0) == ' ') {
+        command = command.substring(1)
+    }
     history('add', command)
     run(command)
     if (command[0] == 'cd' || command[0] == 'neofetch') {
