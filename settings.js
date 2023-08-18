@@ -1,5 +1,6 @@
 hist = []
 pos = -1
+loc = 0
 banned = [
     '<',
     '>',
@@ -174,6 +175,8 @@ defs = {
     magenta:    '#bb9af7',
     cyan:       '#2ac3de',
     white:      '#9699a8',
+    cursor: '▂',
+    cursoralt: '▁'
 }   
 extensions = [
     'sh',

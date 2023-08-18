@@ -2,7 +2,8 @@ terminal = document.getElementById('terminal')
 document.addEventListener("keydown", function(e) {
     if (e.key == 'Backspace') {
         if (terminal.innerHTML.charAt(terminal.innerHTML.length - 1) != '>') {
-            terminal.innerHTML = terminal.innerHTML.slice(0, -1)
+            remove()
+            cursor('blink')
         }
     } else if (e.key == 'Enter') {
         terminal.innerHTML += '<br>'
@@ -11,12 +12,22 @@ document.addEventListener("keydown", function(e) {
         if (e.key == 'ArrowUp') {
             e.preventDefault()
             history('up')
+            loc = terminal.innerHTML.length
         } else if (e.key == 'ArrowDown') {
             e.preventDefault()
             history('down')
+            loc = terminal.innerHTML.length
+        } else if (e.key == 'ArrowLeft') {
+            e.preventDefault()
+            cursor('move', -1)
+        } else if (e.key == 'ArrowRight') {
+            e.preventDefault()
+            cursor('move', 1)
         }
     } else {
-        terminal.innerHTML += e.key
+        insert(e.key)
+        loc += 1
+        cursor('blink')
     }
 })
 function enter() {
@@ -26,6 +37,8 @@ function enter() {
     if (command.substring(1, 0) == ' ') {
         command = command.substring(1)
     }
+    command = command.replaceAll(defs['cursoralt'], '')
+    command = command.replaceAll(defs['cursor'], '')
     history('add', command)
     run(command)
     if (command[0] == 'cd' || command[0] == 'neofetch') {
@@ -37,6 +50,8 @@ function enter() {
     }
     display('theme')
     window.scrollTo(0, document.body.scrollHeight)
+    loc = terminal.innerHTML.length
+    cursor('blink')
 }
 function history(operation, input) {
     if (operation == 'add') {
@@ -102,6 +117,33 @@ function display(id, r, c) {
         terminal.innerHTML += output
     }
 }
+async function cursor(action, value) {
+    if (action == 'move') {
+        if (terminal.innerHTML.charAt(loc+value) != '<' && terminal.innerHTML.charAt(loc+value) != '>' && terminal.innerHTML.charAt(loc+value) != '') {
+            loc += value
+            cursor('blink')
+        }
+    } else if (action == 'blink') {
+        terminal.innerHTML = terminal.innerHTML.replaceAll(defs['cursoralt'], '')
+        terminal.innerHTML = terminal.innerHTML.replaceAll(defs['cursor'], '')
+        terminal.innerHTML = terminal.innerHTML.slice(0, loc) + defs['cursor'] + terminal.innerHTML.slice(loc)
+        setTimeout(async function() {
+            terminal.innerHTML = terminal.innerHTML.replaceAll(defs['cursor'], defs['cursoralt'])
+        }, 500)
+    }
+}
+function insert(value) {
+    terminal.innerHTML = terminal.innerHTML.slice(0, loc) + value+ terminal.innerHTML.slice(loc)
+}
+function remove() {
+    terminal.innerHTML = terminal.innerHTML.replaceAll(defs['cursoralt'], '')
+    terminal.innerHTML = terminal.innerHTML.replaceAll(defs['cursor'], '')
+    terminal.innerHTML = terminal.innerHTML.slice(0, loc-1) + terminal.innerHTML.slice(loc)
+    loc -= 1
+}
+setInterval(async function() {
+    cursor('blink')
+}, 1000)
 document.body.style.backgroundColor = defs['background']
 document.body.style.color = defs['foreground']
 document.documentElement.style.setProperty('--link', defs['green'])
@@ -109,3 +151,4 @@ current = directory
 run('splash')
 terminal.innerHTML += '<br><br>'
 display('theme')
+loc = terminal.innerHTML.length
